@@ -27,6 +27,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 /**
  * Main activity of CASSI, call assistant.
@@ -35,8 +36,18 @@ import android.support.v7.widget.Toolbar;
  */
 public class MainActivity extends AppCompatActivity
         implements MainScreenFragment.OnFragmentInteractionListener {
+    /**
+     * Layout of the MainActivity.
+     */
     private DrawerLayout mDrawerLayout;
+    /**
+     * Object for (de-)activating the navigation drawer.
+     */
     private ActionBarDrawerToggle mDrawerToggle;
+    /**
+     * The last selected menu item in the navigation drawer.
+     */
+    private MenuItem lastItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +63,9 @@ public class MainActivity extends AppCompatActivity
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        NavigationView navView = (NavigationView) findViewById(R.id.cassi_nav);
+        navView.setNavigationItemSelectedListener(new NavClickListener());
+        lastItem = navView.getMenu().getItem(0);
     }
 
     @Override
@@ -59,5 +73,39 @@ public class MainActivity extends AppCompatActivity
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
+    }
+
+    /**
+     * Listener for menu items clicked in the navigation drawer.
+     *
+     * @author Martin Armbruster
+     */
+    private class NavClickListener implements NavigationView.OnNavigationItemSelectedListener {
+        @Override
+        public boolean onNavigationItemSelected(MenuItem item) {
+            if(item.isChecked()) {
+                return true;
+            }
+            switch(item.getItemId()) {
+                case R.id.cassi_menu_main:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.cassi_main_fragment_container,
+                                    new MainScreenFragment()).commit();
+                    getSupportActionBar().setTitle(R.string.app_name);
+                    break;
+                case R.id.cassi_menu_pattern_settings:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.cassi_main_fragment_container,
+                                    new PatternFragment()).commit();
+                    getSupportActionBar().setTitle(R.string.cassi_patterns_title);
+                    break;
+                default: return false;
+            }
+            item.setChecked(true);
+            lastItem.setChecked(false);
+            lastItem = item;
+            mDrawerLayout.closeDrawers();
+            return true;
+        }
     }
 }

@@ -35,4 +35,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <string name="cassi_menu_network_ble">BLE Settings</string>
     <string name="cassi_nav_open">Open navigation</string>
     <string name="cassi_nav_close">Close navigation</string>
+    <string name="cassi_patterns">Patterns:</string>
+    <string name="cassi_patterns_title">Patterns</string>
+    <string name="cassi_patterns_name">Name:</string>
+    <string name="cassi_patterns_save">Save</string>
+    <string name="cassi_patterns_update">Update</string>
+    <string name="cassi_patterns_delete">Delete</string>
+    <string name="cassi_patterns_new_part">New Part</string>
+    <string name="cassi_patterns_part">Part</string>
+    <string name="cassi_patterns_duration">Duration:</string>
+    <string name="cassi_patterns_duration_unit">ms</string>
+    <string name="cassi_patterns_part_1" translatable="false">1</string>
+    <string name="cassi_patterns_part_2" translatable="false">2</string>
+    <string name="cassi_patterns_part_3" translatable="false">3</string>
+    <string name="cassi_patterns_part_4" translatable="false">4</string>
+    <string name="cassi_patterns_part_5" translatable="false">5</string>
+    <string name="cassi_patterns_part_hint" translatable="false">0-255</string>
 </resources>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+########################################################
+#####    CASSI, Call Assistant - The MIT-License    ####
+########################################################
+
+Copyright (C) 2018, Martin Armbruster
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_lay_part" android:text="@string/cassi_patterns_part"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+    <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_delete_part"
+        android:src="@drawable/ic_delete"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_lay_duration" android:text="@string/cassi_patterns_duration"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_delete_part"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+    <EditText android:id="@+id/cassi_patterns_duration"
+        android:layout_width="0dp" android:layout_height="wrap_content"
+        android:inputType="numberSigned"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_delete_part"
+        app:layout_constraintRight_toLeftOf="@id/cassi_patterns_lay_unit"
+        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_lay_duration"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_lay_unit"
+        android:text="@string/cassi_patterns_duration_unit"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_delete_part"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:inputType="numberSigned" android:id="@+id/cassi_patterns_m1"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_duration"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/cassi_patterns_m2"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        android:hint="@string/cassi_patterns_part_hint"/>
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:inputType="numberSigned" android:id="@+id/cassi_patterns_m2"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_duration"
+        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_m1"
+        app:layout_constraintRight_toLeftOf="@id/cassi_patterns_m3"
+        android:hint="@string/cassi_patterns_part_hint"/>
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:inputType="numberSigned" android:id="@+id/cassi_patterns_m3"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_duration"
+        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_m2"
+        app:layout_constraintRight_toLeftOf="@id/cassi_patterns_m4"
+        android:hint="@string/cassi_patterns_part_hint"/>
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:inputType="numberSigned" android:id="@+id/cassi_patterns_m4"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_duration"
+        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_m3"
+        app:layout_constraintRight_toLeftOf="@id/cassi_patterns_m5"
+        android:hint="@string/cassi_patterns_part_hint"/>
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:inputType="numberSigned" android:id="@+id/cassi_patterns_m5"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_duration"
+        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_m4"
+        app:layout_constraintRight_toRightOf="parent"
+        android:hint="@string/cassi_patterns_part_hint"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_lay_part_1" android:text="@string/cassi_patterns_part_1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/cassi_patterns_lay_part_2"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_m1"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_lay_part_2" android:text="@string/cassi_patterns_part_2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_m2"
+        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_lay_part_1"
+        app:layout_constraintRight_toLeftOf="@id/cassi_patterns_lay_part_3"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_lay_part_3" android:text="@string/cassi_patterns_part_3"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_m3"
+        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_lay_part_2"
+        app:layout_constraintRight_toLeftOf="@id/cassi_patterns_lay_part_4"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_lay_part_4" android:text="@string/cassi_patterns_part_4"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_m4"
+        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_lay_part_3"
+        app:layout_constraintRight_toLeftOf="@id/cassi_patterns_lay_part_5"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_lay_part_5" android:text="@string/cassi_patterns_part_5"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_m5"
+        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_lay_part_4"
+        app:layout_constraintRight_toRightOf="parent"/>
+</android.support.constraint.ConstraintLayout>

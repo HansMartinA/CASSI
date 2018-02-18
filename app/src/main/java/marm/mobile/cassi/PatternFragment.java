@@ -21,7 +21,6 @@
 
 package marm.mobile.cassi;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -29,56 +28,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * A fragment for the main screen.
- * Activities that contain this fragment must implement the
- * {@link MainScreenFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- *
- * @author Martin Armbruster
+ * A simple {@link Fragment} subclass.
  */
-public class MainScreenFragment extends Fragment {
-    /**
-     * Listener for interactions.
-     */
-    private OnFragmentInteractionListener mListener;
+public class PatternFragment extends Fragment {
 
     /**
-     * Creates  a new instance.
+     * Creates a new instance.
      */
-    public MainScreenFragment() {
+    public PatternFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main_screen, container, false);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     * @author Martin Armbruster
-     */
-    public interface OnFragmentInteractionListener {
+        return inflater.inflate(R.layout.fragment_pattern, container, false);
     }
 }

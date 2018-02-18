@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+########################################################
+#####    CASSI, Call Assistant - The MIT-License    ####
+########################################################
+
+Copyright (C) 2018, Martin Armbruster
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="marm.mobile.cassi.PatternFragment">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_lay_selection" android:text="@string/cassi_patterns"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cassi_patterns_lay_name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+    <Spinner android:layout_width="0dp" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_selection"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_lay_selection"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cassi_patterns_name"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_lay_name" android:text="@string/cassi_patterns_name"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_selection"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cassi_patterns_save"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+    <EditText android:layout_width="0dp" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_name"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_selection"
+        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_lay_name"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cassi_patterns_save"
+        android:inputType="text"/>
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_save" android:text="@string/cassi_patterns_save"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/cassi_patterns_update" />
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_update" android:text="@string/cassi_patterns_update"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_name"
+        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_save"
+        app:layout_constraintRight_toLeftOf="@id/cassi_patterns_delete"/>
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_delete" android:text="@string/cassi_patterns_delete"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_name"
+        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_update"
+        app:layout_constraintRight_toRightOf="parent"/>
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/cassi_patterns_new_part" android:text="@string/cassi_patterns_new_part"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_delete"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cassi_patterns_content_scroll"/>
+    <ScrollView android:layout_width="0dp" android:layout_height="0dp"
+        android:id="@+id/cassi_patterns_content_scroll"
+        app:layout_constraintTop_toBottomOf="@id/cassi_patterns_new_part"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</android.support.constraint.ConstraintLayout>
