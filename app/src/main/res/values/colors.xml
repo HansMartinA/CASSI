@@ -22,12 +22,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <resources>
-    <color name="primaryColor">#d50000</color>
     <color name="primaryLightColor">#ff5131</color>
-    <color name="primaryDarkColor">#9b0000</color>
-    <color name="secondaryColor">#3d5afe</color>
     <color name="secondaryLightColor">#8187ff</color>
     <color name="secondaryDarkColor">#0031ca</color>
-    <color name="primaryTextColor">#ffffff</color>
-    <color name="secondaryTextColor">#ffffff</color>
+
+    <color name="colorPrimary">#D50000</color>
+    <color name="colorPrimaryDark">#9B0000</color>
+    <color name="colorAccent">#3d5afe</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorPrimaryInverse">#000000</color>
+    <color name="text_color_primary">#ffffff</color>
 </resources>

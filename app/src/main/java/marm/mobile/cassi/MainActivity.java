@@ -21,18 +21,43 @@
 
 package marm.mobile.cassi;
 
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 /**
  * Main activity of CASSI, call assistant.
  *
  * @author Martin Armbruster
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements MainScreenFragment.OnFragmentInteractionListener {
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar tool = (Toolbar) findViewById(R.id.cassi_actionBar);
+        setSupportActionBar(tool);
+        getSupportFragmentManager().beginTransaction().add(R.id.cassi_main_fragment_container,
+                new MainScreenFragment()).commit();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.cassi_nav_parent);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, tool,
+                R.string.cassi_nav_open, R.string.cassi_nav_close);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
     }
 }
