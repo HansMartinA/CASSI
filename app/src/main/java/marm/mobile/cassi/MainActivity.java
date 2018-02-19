@@ -28,6 +28,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import marm.mobile.cassi.model.FileManager;
 
 /**
  * Main activity of CASSI, call assistant.
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navView = (NavigationView) findViewById(R.id.cassi_nav);
         navView.setNavigationItemSelectedListener(new NavClickListener());
         lastItem = navView.getMenu().getItem(0);
+        FileManager.setPlatformFileManager(new AndroidFileManager(this));
     }
 
     @Override
