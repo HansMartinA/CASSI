@@ -88,18 +88,42 @@ public class PatternManager {
      */
     public void save(File dir) {
         for(Pattern p : patterns) {
-            try(FileOutputStream os = new FileOutputStream(dir.getAbsolutePath()
-                    +p.getName()+".pattern")) {
-                int partCount = p.getNumberOfPatternParts();
-                for(int i=0; i<partCount; i++) {
-                    Pattern.PatternPart pp = p.getPatternPart(i);
-                    os.write(pp.getDuration());
-                    os.write('\n');
-                    os.write(pp.getValues());
-                    os.write('\n');
-                }
-            } catch(IOException e) {
-            }
+            save(dir, p);
         }
+    }
+
+    /**
+     * Saves a single pattern.
+     *
+     * @param dir directory path in whicht the pattern will be stored.
+     * @param p the pattern.
+     */
+    public void save(File dir, Pattern p) {
+        try(FileOutputStream os = new FileOutputStream(dir.getAbsolutePath()
+                +p.getName()+".pattern")) {
+            int partCount = p.getNumberOfPatternParts();
+            for(int i=0; i<partCount; i++) {
+                Pattern.PatternPart pp = p.getPatternPart(i);
+                os.write(pp.getDuration());
+                os.write('\n');
+                os.write(pp.getValues());
+                os.write('\n');
+            }
+        } catch(IOException e) {
+        }
+    }
+
+    /**
+     * Deletes a pattern from disk and from the collection.
+     *
+     * @param dir directory path in whicht the patterns are stored.
+     * @param p the pattern.
+     */
+    public void delete(File dir, Pattern p) {
+        File pFile = new File(dir, p.getName()+".pattern");
+        if(pFile.exists()) {
+            pFile.delete();
+        }
+        patterns.remove(p);
     }
 }
