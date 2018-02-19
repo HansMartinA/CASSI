@@ -42,7 +42,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <string name="cassi_patterns_update">Update</string>
     <string name="cassi_patterns_delete">Delete</string>
     <string name="cassi_patterns_new_part">New Part</string>
-    <string name="cassi_patterns_part">Part</string>
+    <string name="cassi_patterns_part">Part %d:</string>
     <string name="cassi_patterns_duration">Duration:</string>
     <string name="cassi_patterns_duration_unit">ms</string>
     <string name="cassi_patterns_part_1" translatable="false">1</string>
@@ -50,5 +50,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <string name="cassi_patterns_part_3" translatable="false">3</string>
     <string name="cassi_patterns_part_4" translatable="false">4</string>
     <string name="cassi_patterns_part_5" translatable="false">5</string>
-    <string name="cassi_patterns_part_hint" translatable="false">0-255</string>
+    <string name="cassi_patterns_part_default" translatable="false">0</string>
+    <string name="cassi_patterns_empty">empty</string>
+    <string name="cassi_patterns_error_unique_name">Couldn\'t save the pattern. The name must be unique.</string>
+    <string name="cassi_patterns_success_save">Pattern saved.</string>
+    <string name="cassi_patterns_success_delete">Pattern deleted.</string>
 </resources>

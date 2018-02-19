@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     android:layout_height="wrap_content"
     android:padding="4dp">
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:id="@+id/cassi_patterns_lay_part" android:text="@string/cassi_patterns_part"
+        android:id="@+id/cassi_patterns_lay_part"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
@@ -46,6 +46,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <EditText android:id="@+id/cassi_patterns_duration"
         android:layout_width="0dp" android:layout_height="wrap_content"
         android:inputType="numberSigned"
+        android:text="@string/cassi_patterns_part_default"
         app:layout_constraintTop_toBottomOf="@id/cassi_patterns_delete_part"
         app:layout_constraintRight_toLeftOf="@id/cassi_patterns_lay_unit"
         app:layout_constraintLeft_toRightOf="@id/cassi_patterns_lay_duration"/>
@@ -61,31 +62,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/cassi_patterns_m2"
         app:layout_constraintHorizontal_chainStyle="spread"
-        android:hint="@string/cassi_patterns_part_hint"/>
+        android:text="@string/cassi_patterns_part_default"/>
     <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:inputType="numberSigned" android:id="@+id/cassi_patterns_m2"
         app:layout_constraintTop_toBottomOf="@id/cassi_patterns_duration"
         app:layout_constraintLeft_toRightOf="@id/cassi_patterns_m1"
         app:layout_constraintRight_toLeftOf="@id/cassi_patterns_m3"
-        android:hint="@string/cassi_patterns_part_hint"/>
+        android:text="@string/cassi_patterns_part_default"/>
     <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:inputType="numberSigned" android:id="@+id/cassi_patterns_m3"
         app:layout_constraintTop_toBottomOf="@id/cassi_patterns_duration"
         app:layout_constraintLeft_toRightOf="@id/cassi_patterns_m2"
         app:layout_constraintRight_toLeftOf="@id/cassi_patterns_m4"
-        android:hint="@string/cassi_patterns_part_hint"/>
+        android:text="@string/cassi_patterns_part_default"/>
     <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:inputType="numberSigned" android:id="@+id/cassi_patterns_m4"
         app:layout_constraintTop_toBottomOf="@id/cassi_patterns_duration"
         app:layout_constraintLeft_toRightOf="@id/cassi_patterns_m3"
         app:layout_constraintRight_toLeftOf="@id/cassi_patterns_m5"
-        android:hint="@string/cassi_patterns_part_hint"/>
+        android:text="@string/cassi_patterns_part_default"/>
     <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:inputType="numberSigned" android:id="@+id/cassi_patterns_m5"
         app:layout_constraintTop_toBottomOf="@id/cassi_patterns_duration"
         app:layout_constraintLeft_toRightOf="@id/cassi_patterns_m4"
         app:layout_constraintRight_toRightOf="parent"
-        android:hint="@string/cassi_patterns_part_hint"/>
+        android:text="@string/cassi_patterns_part_default"/>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:id="@+id/cassi_patterns_lay_part_1" android:text="@string/cassi_patterns_part_1"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"

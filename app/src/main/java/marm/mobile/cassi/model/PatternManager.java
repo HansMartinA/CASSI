@@ -63,10 +63,14 @@ public class PatternManager {
     public void load(File dir) {
         patterns.clear();
         File[] files = dir.listFiles();
+        if(files==null||files.length==0) {
+            return;
+        }
         byte[] valueBuffer = new byte[5];
         for(File f : files) {
             if(f.exists()&&f.getName().endsWith(".pattern")) {
-                Pattern p = new Pattern(f.getName());
+                Pattern p = new Pattern(f.getName().substring(0,
+                        f.getName().length()-8));
                 try(FileInputStream is = new FileInputStream(f)) {
                     while(is.available()>0) {
                         int duration = is.read();
@@ -77,6 +81,7 @@ public class PatternManager {
                     }
                 } catch(IOException e) {
                 }
+                patterns.add(p);
             }
         }
     }
@@ -99,7 +104,10 @@ public class PatternManager {
      * @param p the pattern.
      */
     public void save(File dir, Pattern p) {
-        try(FileOutputStream os = new FileOutputStream(dir.getAbsolutePath()
+        if(!dir.exists()) {
+            dir.mkdirs();
+        }
+        try(FileOutputStream os = new FileOutputStream(dir.getAbsolutePath()+File.separator
                 +p.getName()+".pattern")) {
             int partCount = p.getNumberOfPatternParts();
             for(int i=0; i<partCount; i++) {

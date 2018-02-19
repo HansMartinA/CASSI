@@ -105,6 +105,11 @@ public class Pattern {
         patternParts.clear();
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     /**
      * Part of a pattern.
      *
