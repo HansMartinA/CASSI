@@ -101,6 +101,12 @@ public class MainActivity extends AppCompatActivity
                                     new PatternFragment()).commit();
                     getSupportActionBar().setTitle(R.string.cassi_patterns_title);
                     break;
+                case R.id.cassi_menu_pattern_mappings:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.cassi_main_fragment_container,
+                                    new PatternMappingFragment()).commit();
+                    getSupportActionBar().setTitle(R.string.cassi_mapping_title);
+                    break;
                 default: return false;
             }
             item.setChecked(true);

@@ -55,4 +55,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <string name="cassi_patterns_error_unique_name">Couldn\'t save the pattern. The name must be unique.</string>
     <string name="cassi_patterns_success_save">Pattern saved.</string>
     <string name="cassi_patterns_success_delete">Pattern deleted.</string>
+    <string name="cassi_mapping_calls">Calls:</string>
+    <string name="cassi_mapping_sms">SMS/MMS:</string>
+    <string name="cassi_mapping_title">Service-Pattern Mappings</string>
 </resources>
