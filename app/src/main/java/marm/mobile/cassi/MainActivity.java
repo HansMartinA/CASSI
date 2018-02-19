@@ -107,6 +107,12 @@ public class MainActivity extends AppCompatActivity
                                     new PatternMappingFragment()).commit();
                     getSupportActionBar().setTitle(R.string.cassi_mapping_title);
                     break;
+                case R.id.cassi_menu_network_ble:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.cassi_main_fragment_container,
+                                    new BLESettingsFragment()).commit();
+                    getSupportActionBar().setTitle(R.string.cassi_settings_ble_title);
+                    break;
                 default: return false;
             }
             item.setChecked(true);

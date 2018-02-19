@@ -58,4 +58,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <string name="cassi_mapping_calls">Calls:</string>
     <string name="cassi_mapping_sms">SMS/MMS:</string>
     <string name="cassi_mapping_title">Service-Pattern Mappings</string>
+    <string name="cassi_settings_ble_title">Bluetooth Low Energy</string>
+    <string name="cassi_settings_ble_device">Device name:</string>
+    <string name="cassi_settings_ble_service1">Service name (part 1):</string>
+    <string name="cassi_settings_ble_service2">Service name (part 2):</string>
 </resources>
