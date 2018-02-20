@@ -53,6 +53,10 @@ public class CASSIService extends Service {
      */
     private static final int NOTIFICATION_ID = 1;
     /**
+     * ID for a notification indicating the service has stopped.
+     */
+    private static final int NOTIFICATION_END_ID = 3;
+    /**
      * Notification channel id.
      */
     private static final String NOTIFICATION_CHANNEL = "2";
@@ -92,7 +96,7 @@ public class CASSIService extends Service {
                             updateNotification(getString(R.string.cassi_notification_scan));
                             break;
                         case CASSIServiceCallback.BLE_STATE_SCAN_DEVICE_NOT_FOUND:
-                            updateNotification(String.format(
+                            endNotification(String.format(
                                     getString(R.string.cassi_notification_scan_not_found),
                                     bleHandler.getDeviceName()));
                             threadPool.shutdown();
@@ -115,14 +119,12 @@ public class CASSIService extends Service {
                             registerReceiver(broadcastReceiver, filter);
                             break;
                         case CASSIServiceCallback.BLE_STATE_DISCONNECTING:
-                            unregisterReceiver(broadcastReceiver);
                             updateNotification(String.format(
                                     getString(R.string.cassi_notification_disconnecting),
                                     bleHandler.getDeviceName()));
                             break;
                         case CASSIServiceCallback.BLE_STATE_DISCONNECTED:
-                            unregisterReceiver(broadcastReceiver);
-                            updateNotification(getString(R.string.cassi_notification_disconnected));
+                            endNotification(getString(R.string.cassi_notification_disconnected));
                             threadPool.shutdown();
                             stopSelf();
                             break;
@@ -208,6 +210,7 @@ public class CASSIService extends Service {
 
     @Override
     public void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
         if(!threadPool.isTerminated()) {
             threadPool.shutdownNow();
         }
@@ -236,15 +239,9 @@ public class CASSIService extends Service {
             setUpNotificationChannel();
         }
         notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL);
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        Notification not = notificationBuilder
-                .setContentTitle(getString(R.string.cassi_notification_title))
-                .setContentText(getString(R.string.cassi_notification_scan))
-                .setSmallIcon(R.drawable.ic_cassi_notification)
-                .setContentIntent(pendingIntent)
-                .build();
-        startForeground(NOTIFICATION_ID, not);
+        startForeground(NOTIFICATION_ID, createNotification(
+                getString(R.string.cassi_notification_title),
+                getString(R.string.cassi_notification_scan)));
     }
 
     /**
@@ -253,7 +250,35 @@ public class CASSIService extends Service {
      * @param text text to display in the notification.
      */
     private void updateNotification(String text) {
-        Notification not = notificationBuilder.setContentText(text).build();
-        notificationManager.notify(NOTIFICATION_ID, not);
+        notificationManager.notify(NOTIFICATION_ID, createNotification(
+                getString(R.string.cassi_notification_title), text));
+    }
+
+    /**
+     * Shows a ending notification.
+     *
+     * @param text text to display in the notification.
+     */
+    private void endNotification(String text) {
+        notificationManager.notify(2, createNotification(
+                getString(R.string.cassi_notification_end_title), text));
+    }
+
+    /**
+     * Creates a notification.
+     *
+     * @param title title of the notification.
+     * @param text text of the notification.
+     * @return the created notification.
+     */
+    private Notification createNotification(String title, String text) {
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        return notificationBuilder
+                .setContentTitle(title)
+                .setContentText(text)
+                .setSmallIcon(R.drawable.ic_cassi_notification)
+                .setContentIntent(pendingIntent)
+                .build();
     }
 }

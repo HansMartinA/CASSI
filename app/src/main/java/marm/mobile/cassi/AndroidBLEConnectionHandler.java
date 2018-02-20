@@ -21,6 +21,7 @@
 
 package marm.mobile.cassi;
 
+import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -29,8 +30,13 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import marm.mobile.cassi.model.BLEConnectionHandler;
 import marm.mobile.cassi.model.CASSIServiceCallback;
 
@@ -56,8 +62,7 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
         public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
             if(bluetoothDevice.getName().equals(getDeviceName())) {
                 bleAdapter.stopLeScan(this);
-                cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_CONNECTING);
-                bluetoothDevice.connectGatt(context, false, gattCallback);
+                onDeviceFound(bluetoothDevice);
             }
         }
     };
@@ -146,6 +151,7 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
      */
     public AndroidBLEConnectionHandler(Context context, CASSIServiceCallback.OnBLEStateChanged
                                        callback) {
+        super();
         this.context = context;
         cassiCallback = callback;
     }
@@ -164,18 +170,64 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
      */
     private void scanBLE() {
         cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_SCANNING);
-        Handler handler = new Handler();
         final BluetoothManager bManager = (BluetoothManager) context
                 .getSystemService(Context.BLUETOOTH_SERVICE);
         bleAdapter = bManager.getAdapter();
+        Looper.prepare();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            scanBLE21(bleAdapter.getBluetoothLeScanner());
+        } else {
+            bleAdapter.startLeScan(callback);
+        }
+        Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                bleAdapter.stopLeScan(callback);
+                if(bleGatt!=null) {
+                    return;
+                }
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    bleAdapter.getBluetoothLeScanner().stopScan((ScanCallback) null);
+                } else {
+                    bleAdapter.stopLeScan(callback);
+                }
                 cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_SCAN_DEVICE_NOT_FOUND);
             }
         }, 15000);
-        bleAdapter.startLeScan(callback);
+        Looper.loop();
+    }
+
+    /**
+     * Scans for BLE devices on Android Lollipop and above.
+     *
+     * @param scanner the BLE scanner.
+     */
+    @TargetApi(21)
+    private void scanBLE21(final BluetoothLeScanner scanner) {
+        final ScanCallback leScanCallback = new ScanCallback() {
+            @Override
+            public void onScanResult(int callbackType, ScanResult result) {
+                BluetoothDevice device = result.getDevice();
+                if(device.getName()==null) {
+                    return;
+                }
+                if(device.getName().equals(getDeviceName())) {
+                    scanner.stopScan(this);
+                    onDeviceFound(device);
+                }
+            }
+        };
+        scanner.startScan(leScanCallback);
+    }
+
+    /**
+     * Called when the specified BLE device was found.
+     *
+     * @param device the BLE device.
+     */
+    private void onDeviceFound(BluetoothDevice device) {
+        cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_CONNECTING);
+        bleGatt = device.connectGatt(context, false, gattCallback);
     }
 
     @Override
