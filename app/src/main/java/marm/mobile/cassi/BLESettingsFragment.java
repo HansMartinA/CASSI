@@ -55,7 +55,7 @@ public class BLESettingsFragment extends Fragment {
      * Creates a new instance.
      */
     public BLESettingsFragment() {
-        bleConnector = new AndroidBLEConnectionHandler();
+        bleConnector = new AndroidBLEConnectionHandler(getContext(), null);
     }
 
     @Override

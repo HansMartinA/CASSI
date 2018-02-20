@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.IBinder;
 import android.provider.Telephony;
 import android.support.v4.app.NotificationCompat;
@@ -94,6 +95,8 @@ public class CASSIService extends Service {
                             updateNotification(String.format(
                                     getString(R.string.cassi_notification_scan_not_found),
                                     bleHandler.getDeviceName()));
+                            threadPool.shutdown();
+                            stopSelf();
                             break;
                         case CASSIServiceCallback.BLE_STATE_CONNECTING:
                             updateNotification(String.format(
@@ -175,6 +178,9 @@ public class CASSIService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if(threadPool!=null) {
+            return Service.START_STICKY;
+        }
         threadPool = Executors.newFixedThreadPool(2);
         final Context context = this;
         threadPool.submit(new Runnable() {
@@ -226,7 +232,9 @@ public class CASSIService extends Service {
      */
     private void setUpNotification() {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        setUpNotificationChannel();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            setUpNotificationChannel();
+        }
         notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL);
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
