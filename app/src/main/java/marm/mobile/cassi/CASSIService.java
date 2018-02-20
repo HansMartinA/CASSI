@@ -210,7 +210,9 @@ public class CASSIService extends Service {
 
     @Override
     public void onDestroy() {
-        unregisterReceiver(broadcastReceiver);
+        if(broadcastReceiver!=null) {
+            unregisterReceiver(broadcastReceiver);
+        }
         if(!threadPool.isTerminated()) {
             threadPool.shutdownNow();
         }

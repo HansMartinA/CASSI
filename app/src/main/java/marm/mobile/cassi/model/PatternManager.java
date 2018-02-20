@@ -21,9 +21,13 @@
 
 package marm.mobile.cassi.model;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,15 +75,20 @@ public class PatternManager {
             if(f.exists()&&f.getName().endsWith(".pattern")) {
                 Pattern p = new Pattern(f.getName().substring(0,
                         f.getName().length()-8));
-                try(FileInputStream is = new FileInputStream(f)) {
-                    while(is.available()>0) {
-                        int duration = is.read();
-                        is.read(new byte[1]);
-                        is.read(valueBuffer);
+                try(FileReader is = new FileReader(f);
+                BufferedReader reader = new BufferedReader(is)) {
+                    String line = reader.readLine();
+                    while(line!=null) {
+                        int duration = Integer.parseInt(line);
+                        line = reader.readLine();
+                        String[] values = line.split(" ");
+                        for(int j=0; j<valueBuffer.length; j++) {
+                            valueBuffer[j] = Byte.parseByte(values[j]);
+                        }
                         p.addPart(duration, valueBuffer);
-                        is.read(new byte[1]);
+                        line = reader.readLine();
                     }
-                } catch(IOException e) {
+                } catch(NumberFormatException | IOException e) {
                 }
                 patterns.add(p);
             }
@@ -107,15 +116,17 @@ public class PatternManager {
         if(!dir.exists()) {
             dir.mkdirs();
         }
-        try(FileOutputStream os = new FileOutputStream(dir.getAbsolutePath()+File.separator
-                +p.getName()+".pattern")) {
+        try(FileWriter os = new FileWriter(dir.getAbsolutePath()+File.separator
+                +p.getName()+".pattern");
+            BufferedWriter writer = new BufferedWriter(os)) {
             int partCount = p.getNumberOfPatternParts();
             for(int i=0; i<partCount; i++) {
                 Pattern.PatternPart pp = p.getPatternPart(i);
-                os.write(pp.getDuration());
-                os.write('\n');
-                os.write(pp.getValues());
-                os.write('\n');
+                writer.write(pp.getDuration()+"\n");
+                for(int j=0; j<pp.getValues().length; j++) {
+                    writer.write(pp.getValues()[j]+" ");
+                }
+                writer.write("\n");
             }
         } catch(IOException e) {
         }
