@@ -70,7 +70,6 @@ public class PatternManager {
         if(files==null||files.length==0) {
             return;
         }
-        byte[] valueBuffer = new byte[5];
         for(File f : files) {
             if(f.exists()&&f.getName().endsWith(".pattern")) {
                 Pattern p = new Pattern(f.getName().substring(0,
@@ -80,6 +79,7 @@ public class PatternManager {
                     String line = reader.readLine();
                     while(line!=null) {
                         int duration = Integer.parseInt(line);
+                        byte[] valueBuffer = new byte[5];
                         line = reader.readLine();
                         String[] values = line.split(" ");
                         for(int j=0; j<valueBuffer.length; j++) {

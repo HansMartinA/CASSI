@@ -142,8 +142,11 @@ public class CASSIService extends Service {
                         public void run() {
                             updateNotification(getString(R.string.cassi_notification_call));
                             bleHandler.playPattern(map.getMapping(PSMapping.CALL), true);
-                            updateNotification(String.format(getString(R.string.cassi_notification_connected),
-                                    bleHandler.getDeviceName()));
+                            if(bleHandler!=null) {
+                                updateNotification(String.format(
+                                        getString(R.string.cassi_notification_connected),
+                                        bleHandler.getDeviceName()));
+                            }
                         }
                     });
                 }
@@ -160,8 +163,11 @@ public class CASSIService extends Service {
                         public void run() {
                             updateNotification(getString(R.string.cassi_notification_sms));
                             bleHandler.playPattern(map.getMapping(PSMapping.SMS), false);
-                            updateNotification(String.format(getString(R.string.cassi_notification_connected),
-                                    bleHandler.getDeviceName()));
+                            if(bleHandler!=null) {
+                                updateNotification(String.format(
+                                        getString(R.string.cassi_notification_connected),
+                                        bleHandler.getDeviceName()));
+                            }
                         }
                     });
                 }

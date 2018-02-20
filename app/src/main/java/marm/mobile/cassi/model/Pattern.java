@@ -83,7 +83,7 @@ public class Pattern {
      * @return the requested pattern part or null if number is out of bounds.
      */
     public PatternPart getPatternPart(int number) {
-        if(number<0||number>patternParts.size()) {
+        if(number<0||number>=patternParts.size()) {
             return null;
         }
         return patternParts.get(number);

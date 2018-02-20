@@ -114,6 +114,11 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
                 send(noPlay);
             }
         }
+
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            System.out.println("hier");
+        }
     };
     /**
      * Stores the characteristic that receives value updates.
@@ -245,6 +250,7 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
             actualValues[i] = values[i];
         }
         receiver.setValue(actualValues);
+        receiver.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
         bleGatt.writeCharacteristic(receiver);
     }
 

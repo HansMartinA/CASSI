@@ -73,4 +73,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <string name="cassi_notification_channel_description">This channel provides information about the current state of CASSI and its connections.</string>
     <string name="cassi_notification_disconnected">Disconnected from %s</string>
     <string name="cassi_notification_end_title">CASSI (stopped)</string>
+    <string name="cassi_patterns_error_invalid_numbers">Pattern saved. Please note: There were some invalid numbers that were corrected.</string>
+    <string name="cassi_patterns_error_note_range">Note: The values must be within 0 and 255.</string>
 </resources>

@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatImageButton;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,22 +144,35 @@ public class PatternFragment extends Fragment
             EditText editor = v.findViewById(R.id.cassi_patterns_duration);
             editor.setText(String.format("%d", pp.getDuration()));
             editor = v.findViewById(R.id.cassi_patterns_m1);
-            editor.setText(String.format("%d", pp.getValues()[0]));
+            editor.setText(String.format("%d", normalizeB(pp.getValues()[0])));
             editor = v.findViewById(R.id.cassi_patterns_m2);
-            editor.setText(String.format("%d", pp.getValues()[1]));
+            editor.setText(String.format("%d", normalizeB(pp.getValues()[1])));
             editor = v.findViewById(R.id.cassi_patterns_m3);
-            editor.setText(String.format("%d", pp.getValues()[2]));
+            editor.setText(String.format("%d", normalizeB(pp.getValues()[2])));
             editor = v.findViewById(R.id.cassi_patterns_m4);
-            editor.setText(String.format("%d", pp.getValues()[3]));
+            editor.setText(String.format("%d", normalizeB(pp.getValues()[3])));
             editor = v.findViewById(R.id.cassi_patterns_m5);
-            editor.setText(String.format("%d", pp.getValues()[4]));
+            editor.setText(String.format("%d", normalizeB(pp.getValues()[4])));
         }
+    }
+
+    /**
+     * Normalizes a byte value to a positive int value.
+     *
+     * @param b the byte value.
+     * @return the normalized positive int value.
+     */
+    private int normalizeB(byte b) {
+        int result = b;
+        result &= 0xFF;
+        return result;
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         parent.setSelection(0);
         selectedPattern = empty;
+        showSelectedPattern();
     }
 
     /**
@@ -176,32 +190,79 @@ public class PatternFragment extends Fragment
             }
         }
         Pattern newPattern = new Pattern(name);
+        boolean showNote = false;
         for(int i=0; i<partsContent.getChildCount(); i++) {
+            View child = partsContent.getChildAt(i);
+            EditText editor = child.findViewById(R.id.cassi_patterns_duration);
+            int duration = 0;
             try {
-                View child = partsContent.getChildAt(i);
-                EditText editor = child.findViewById(R.id.cassi_patterns_duration);
-                int duration = Integer.parseInt(editor.getText().toString());
-                byte[] values = new byte[5];
-                editor = child.findViewById(R.id.cassi_patterns_m1);
-                values[0] = Byte.parseByte(editor.getText().toString());
-                editor = child.findViewById(R.id.cassi_patterns_m2);
-                values[1] = Byte.parseByte(editor.getText().toString());
-                editor = child.findViewById(R.id.cassi_patterns_m3);
-                values[2] = Byte.parseByte(editor.getText().toString());
-                editor = child.findViewById(R.id.cassi_patterns_m4);
-                values[3] = Byte.parseByte(editor.getText().toString());
-                editor = child.findViewById(R.id.cassi_patterns_m5);
-                values[4] = Byte.parseByte(editor.getText().toString());
-                newPattern.addPart(duration, values);
-            } catch(NumberFormatException nfE) {
+                duration = Integer.parseInt(editor.getText().toString());
+            } catch(NumberFormatException e) {
+                showNote = true;
             }
+            byte[] values = new byte[5];
+            editor = child.findViewById(R.id.cassi_patterns_m1);
+            try {
+                int val = Integer.parseInt(editor.getText().toString());
+                values[0] = normalize(val);
+            } catch(NumberFormatException e) {
+                showNote = true;
+            }
+            editor = child.findViewById(R.id.cassi_patterns_m2);
+            try {
+                int val = Integer.parseInt(editor.getText().toString());
+                values[1] = normalize(val);
+            } catch(NumberFormatException e) {
+                showNote = true;
+            }
+            editor = child.findViewById(R.id.cassi_patterns_m3);
+            try {
+                int val = Integer.parseInt(editor.getText().toString());
+                values[2] = normalize(val);
+            } catch(NumberFormatException e) {
+                showNote = true;
+            }
+            editor = child.findViewById(R.id.cassi_patterns_m4);
+            try {
+                int val = Integer.parseInt(editor.getText().toString());
+                values[3] = normalize(val);
+            } catch(NumberFormatException e) {
+                showNote = true;
+            }
+            editor = child.findViewById(R.id.cassi_patterns_m5);
+            try {
+                int val = Integer.parseInt(editor.getText().toString());
+                values[4] = normalize(val);
+            } catch(NumberFormatException e) {
+                showNote = true;
+            }
+            newPattern.addPart(duration, values);
         }
         pManager.save(FileManager.getInternalPatternDirectory(), newPattern);
         pManager.getPatterns().add(newPattern);
         selectedPattern = newPattern;
         pSpinner.setSelection(pManager.getPatterns().size()-1);
-        Snackbar.make(pSpinner,
-                R.string.cassi_patterns_success_save, Snackbar.LENGTH_SHORT).show();
+        if(showNote) {
+            Snackbar.make(pSpinner, R.string.cassi_patterns_error_invalid_numbers,
+                    Snackbar.LENGTH_LONG).show();
+        } else {
+            Snackbar.make(pSpinner,
+                    R.string.cassi_patterns_success_save, Snackbar.LENGTH_SHORT).show();
+        }
+        showSelectedPattern();
+    }
+
+    /**
+     * Normalizes a int value to a byte.
+     *
+     * @param value the int value.
+     * @return the normalized valid byte value.
+     */
+    private byte normalize(int value) {
+        if(value>255) {
+            value = 255;
+        }
+        return (byte) value;
     }
 
     /**
@@ -258,7 +319,7 @@ public class PatternFragment extends Fragment
         partsContent.removeView(v);
         for(int i=0; i<partsContent.getChildCount(); i++) {
             ((TextView) partsContent.getChildAt(i).findViewById(R.id.cassi_patterns_lay_part))
-                    .setText(String.format(getString(R.string.cassi_patterns_part), i));
+                    .setText(String.format(getString(R.string.cassi_patterns_part), i+1));
         }
     }
 }
