@@ -62,4 +62,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <string name="cassi_settings_ble_device">Device name:</string>
     <string name="cassi_settings_ble_service1">Service name (part 1):</string>
     <string name="cassi_settings_ble_service2">Service name (part 2):</string>
+    <string name="cassi_notification_title">CASSI, call assistant</string>
+    <string name="cassi_notification_scan">Scanning BLE devices</string>
+    <string name="cassi_notification_connecting">Connecting to %s</string>
+    <string name="cassi_notification_scan_not_found">Device %s not found</string>
+    <string name="cassi_notification_connected">Connected to %s</string>
+    <string name="cassi_notification_call">Incoming call</string>
+    <string name="cassi_notification_sms">Incoming sms/mms</string>
+    <string name="cassi_notification_disconnecting">Disconnecting from %s</string>
+    <string name="cassi_notification_channel_title">CASSI</string>
+    <string name="cassi_notification_channel_description">This channel provides information about the current state of CASSI and its connections.</string>
+    <string name="cassi_notification_disconnected">Disconnected</string>
 </resources>

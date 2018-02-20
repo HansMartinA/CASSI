@@ -32,6 +32,7 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.os.Handler;
 import marm.mobile.cassi.model.BLEConnectionHandler;
+import marm.mobile.cassi.model.CASSIServiceCallback;
 
 /**
  * A Bluetooth Low Energy connection handler for Android.
@@ -55,6 +56,7 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
         public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
             if(bluetoothDevice.getName().equals(getDeviceName())) {
                 bleAdapter.stopLeScan(this);
+                cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_CONNECTING);
                 bluetoothDevice.connectGatt(context, false, gattCallback);
             }
         }
@@ -70,7 +72,10 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             if(newState== BluetoothProfile.STATE_CONNECTED) {
+                cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_CONNECTED);
                 bleGatt.discoverServices();
+            } else if(newState==BluetoothProfile.STATE_DISCONNECTED) {
+                cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_DISCONNECTED);
             }
         }
 
@@ -105,6 +110,10 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
      */
     private BluetoothGattCharacteristic receiver;
     /**
+     * Stores the callback to the CASSI service.
+     */
+    private CASSIServiceCallback.OnBLEStateChanged cassiCallback;
+    /**
      * Name of the service.
      */
     private String service;
@@ -133,9 +142,12 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
      * Creates a new instance.
      *
      * @param context context in which the connection takes place.
+     * @param callback Callback to the CASSI service.
      */
-    public AndroidBLEConnectionHandler(Context context) {
+    public AndroidBLEConnectionHandler(Context context, CASSIServiceCallback.OnBLEStateChanged
+                                       callback) {
         this.context = context;
+        cassiCallback = callback;
     }
 
     @Override
@@ -151,6 +163,7 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
      * Scans for the ble device.
      */
     private void scanBLE() {
+        cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_SCANNING);
         Handler handler = new Handler();
         final BluetoothManager bManager = (BluetoothManager) context
                 .getSystemService(Context.BLUETOOTH_SERVICE);
@@ -159,6 +172,7 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
             @Override
             public void run() {
                 bleAdapter.stopLeScan(callback);
+                cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_SCAN_DEVICE_NOT_FOUND);
             }
         }, 15000);
         bleAdapter.startLeScan(callback);
@@ -184,11 +198,14 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
 
     @Override
     public void disconnect() {
+        cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_DISCONNECTING);
         if(bleGatt!=null) {
             bleGatt.close();
             bleAdapter = null;
             bleGatt = null;
             receiver = null;
+        } else {
+            cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_DISCONNECTED);
         }
     }
 }
