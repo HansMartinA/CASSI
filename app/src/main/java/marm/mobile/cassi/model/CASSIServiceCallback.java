@@ -44,10 +44,6 @@ public final class CASSIServiceCallback {
      */
     public final static int BLE_STATE_SCAN_DEVICE_NOT_FOUND = 3;
     /**
-     * Constant for representing the disconnecting from the BLE device.
-     */
-    public final static int BLE_STATE_DISCONNECTING = 4;
-    /**
      * Constant for representing a disconnection.
      */
     public final static int BLE_STATE_DISCONNECTED = 5;

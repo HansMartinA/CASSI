@@ -71,12 +71,17 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
      */
     private BluetoothGatt bleGatt;
     /**
+     * Boolean value indicating if a connection has been established.
+     */
+    private boolean connected = false;
+    /**
      * Callback for gatt actions.
      */
     private BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             if(newState== BluetoothProfile.STATE_CONNECTED) {
+                connected = true;
                 cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_CONNECTED);
                 bleGatt.discoverServices();
             } else if(newState==BluetoothProfile.STATE_DISCONNECTED) {
@@ -183,7 +188,7 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(bleGatt!=null) {
+                if(connected) {
                     return;
                 }
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -250,14 +255,12 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
 
     @Override
     public void disconnect() {
-        cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_DISCONNECTING);
+        cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_DISCONNECTED);
         if(bleGatt!=null) {
             bleGatt.close();
             bleAdapter = null;
             bleGatt = null;
             receiver = null;
-        } else {
-            cassiCallback.onBLEStateChanged(CASSIServiceCallback.BLE_STATE_DISCONNECTED);
         }
     }
 }

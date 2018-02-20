@@ -51,16 +51,15 @@ public class CallReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(intent.equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)) {
-            int state = intent.getIntExtra(TelephonyManager.EXTRA_STATE,
-                    TelephonyManager.CALL_STATE_IDLE);
-            if(state==TelephonyManager.CALL_STATE_RINGING) {
+        if(intent.getAction().equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)) {
+            String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
+            if(state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
                 cassiCallback.onCallStart();
             } else {
                 cassiCallback.onCallStop();
             }
-        } else if(intent.equals(Telephony.Sms.Intents.DATA_SMS_RECEIVED_ACTION)
-                || intent.equals(Telephony.Sms.Intents.SMS_CB_RECEIVED_ACTION)) {
+        } else if(intent.getAction().equals(Telephony.Sms.Intents.DATA_SMS_RECEIVED_ACTION)
+                || intent.getAction().equals(Telephony.Sms.Intents.SMS_CB_RECEIVED_ACTION)) {
             cassiCallback.onSMSMMSReceived();
         }
     }

@@ -99,6 +99,7 @@ public class CASSIService extends Service {
                             endNotification(String.format(
                                     getString(R.string.cassi_notification_scan_not_found),
                                     bleHandler.getDeviceName()));
+                            bleHandler = null;
                             threadPool.shutdown();
                             stopSelf();
                             break;
@@ -118,13 +119,11 @@ public class CASSIService extends Service {
                             filter.addAction(Telephony.Sms.Intents.SMS_CB_RECEIVED_ACTION);
                             registerReceiver(broadcastReceiver, filter);
                             break;
-                        case CASSIServiceCallback.BLE_STATE_DISCONNECTING:
-                            updateNotification(String.format(
-                                    getString(R.string.cassi_notification_disconnecting),
-                                    bleHandler.getDeviceName()));
-                            break;
                         case CASSIServiceCallback.BLE_STATE_DISCONNECTED:
-                            endNotification(getString(R.string.cassi_notification_disconnected));
+                            endNotification(String.format(
+                                    getString(R.string.cassi_notification_disconnected),
+                                    bleHandler.getDeviceName()));
+                            bleHandler = null;
                             threadPool.shutdown();
                             stopSelf();
                             break;
@@ -138,10 +137,13 @@ public class CASSIService extends Service {
             new CASSIServiceCallback.OnMessageDelivery() {
                 @Override
                 public void onCallStart() {
-                    threadPool.submit(new Runnable() {
+                    threadPool.execute(new Runnable() {
                         @Override
                         public void run() {
+                            updateNotification(getString(R.string.cassi_notification_call));
                             bleHandler.playPattern(map.getMapping(PSMapping.CALL), true);
+                            updateNotification(String.format(getString(R.string.cassi_notification_connected),
+                                    bleHandler.getDeviceName()));
                         }
                     });
                 }
@@ -153,10 +155,13 @@ public class CASSIService extends Service {
 
                 @Override
                 public void onSMSMMSReceived() {
-                    threadPool.submit(new Runnable() {
+                    threadPool.execute(new Runnable() {
                         @Override
                         public void run() {
+                            updateNotification(getString(R.string.cassi_notification_sms));
                             bleHandler.playPattern(map.getMapping(PSMapping.SMS), false);
+                            updateNotification(String.format(getString(R.string.cassi_notification_connected),
+                                    bleHandler.getDeviceName()));
                         }
                     });
                 }
@@ -183,9 +188,9 @@ public class CASSIService extends Service {
         if(threadPool!=null) {
             return Service.START_STICKY;
         }
-        threadPool = Executors.newFixedThreadPool(2);
+        threadPool = Executors.newFixedThreadPool(3);
         final Context context = this;
-        threadPool.submit(new Runnable() {
+        threadPool.execute(new Runnable() {
             @Override
             public void run() {
                 map = new PSMapping();
@@ -193,7 +198,7 @@ public class CASSIService extends Service {
                 bleHandler.connect();
             }
         });
-        threadPool.submit(new Runnable() {
+        threadPool.execute(new Runnable() {
             @Override
             public void run() {
                 long time = 15L*60*1000;
@@ -210,6 +215,9 @@ public class CASSIService extends Service {
 
     @Override
     public void onDestroy() {
+        if(bleHandler!=null) {
+            bleHandler.disconnect();
+        }
         if(broadcastReceiver!=null) {
             unregisterReceiver(broadcastReceiver);
         }
@@ -262,7 +270,7 @@ public class CASSIService extends Service {
      * @param text text to display in the notification.
      */
     private void endNotification(String text) {
-        notificationManager.notify(2, createNotification(
+        notificationManager.notify(NOTIFICATION_END_ID, createNotification(
                 getString(R.string.cassi_notification_end_title), text));
     }
 

@@ -69,9 +69,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <string name="cassi_notification_connected">Connected to %s</string>
     <string name="cassi_notification_call">Incoming call</string>
     <string name="cassi_notification_sms">Incoming sms/mms</string>
-    <string name="cassi_notification_disconnecting">Disconnecting from %s</string>
     <string name="cassi_notification_channel_title">CASSI</string>
     <string name="cassi_notification_channel_description">This channel provides information about the current state of CASSI and its connections.</string>
-    <string name="cassi_notification_disconnected">Disconnected</string>
+    <string name="cassi_notification_disconnected">Disconnected from %s</string>
     <string name="cassi_notification_end_title">CASSI (stopped)</string>
 </resources>
