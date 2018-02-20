@@ -72,4 +72,26 @@ public final class CASSIServiceCallback {
          */
         void onBLEStateChanged(int newState);
     }
+
+    /**
+     * Interface for notifying the CASSI service that a message is delivered.
+     *
+     * @author Martin Armbruster
+     */
+    public interface OnMessageDelivery {
+        /**
+         * Called when a call starts.
+         */
+        void onCallStart();
+
+        /**
+         * Called when a call stops.
+         */
+        void onCallStop();
+
+        /**
+         * Called when a SMS/MMS is received.
+         */
+        void onSMSMMSReceived();
+    }
 }

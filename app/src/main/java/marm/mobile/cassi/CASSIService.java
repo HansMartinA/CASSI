@@ -29,12 +29,16 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.IBinder;
+import android.provider.Telephony;
 import android.support.v4.app.NotificationCompat;
+import android.telephony.TelephonyManager;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import marm.mobile.cassi.model.CASSIServiceCallback;
+import marm.mobile.cassi.model.PSMapping;
 
 /**
  * The main CASSI service responsible for handling incoming messages and output to the connected
@@ -60,9 +64,17 @@ public class CASSIService extends Service {
      */
     private NotificationCompat.Builder notificationBuilder;
     /**
+     * Mapping for services to patterns.
+     */
+    private PSMapping map;
+    /**
      * Connection handler for Bluetooth Low Energy on Android.
      */
     private AndroidBLEConnectionHandler bleHandler;
+    /**
+     * Broadcast receiver for incoming messages.
+     */
+    private CallReceiver broadcastReceiver;
     /**
      * ThreadPool for executing the actual work.
      */
@@ -92,18 +104,56 @@ public class CASSIService extends Service {
                             updateNotification(String.format(
                                     getString(R.string.cassi_notification_connected),
                                     bleHandler.getDeviceName()));
+                            broadcastReceiver = new CallReceiver(messCallback);
+                            IntentFilter filter = new IntentFilter();
+                            filter.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+                            filter.addAction(Telephony.Sms.Intents.DATA_SMS_RECEIVED_ACTION);
+                            filter.addAction(Telephony.Sms.Intents.SMS_CB_RECEIVED_ACTION);
+                            registerReceiver(broadcastReceiver, filter);
                             break;
                         case CASSIServiceCallback.BLE_STATE_DISCONNECTING:
+                            unregisterReceiver(broadcastReceiver);
                             updateNotification(String.format(
                                     getString(R.string.cassi_notification_disconnecting),
                                     bleHandler.getDeviceName()));
                             break;
                         case CASSIServiceCallback.BLE_STATE_DISCONNECTED:
+                            unregisterReceiver(broadcastReceiver);
                             updateNotification(getString(R.string.cassi_notification_disconnected));
                             threadPool.shutdown();
                             stopSelf();
                             break;
                     }
+                }
+            };
+    /**
+     * Callback to this service when a message is delivered.
+     */
+    private CASSIServiceCallback.OnMessageDelivery messCallback =
+            new CASSIServiceCallback.OnMessageDelivery() {
+                @Override
+                public void onCallStart() {
+                    threadPool.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            bleHandler.playPattern(map.getMapping(PSMapping.CALL), true);
+                        }
+                    });
+                }
+
+                @Override
+                public void onCallStop() {
+                    bleHandler.stopPlaying();
+                }
+
+                @Override
+                public void onSMSMMSReceived() {
+                    threadPool.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            bleHandler.playPattern(map.getMapping(PSMapping.SMS), false);
+                        }
+                    });
                 }
             };
 
@@ -130,6 +180,7 @@ public class CASSIService extends Service {
         threadPool.submit(new Runnable() {
             @Override
             public void run() {
+                map = new PSMapping();
                 bleHandler = new AndroidBLEConnectionHandler(context, bleCallback);
                 bleHandler.connect();
             }
