@@ -122,27 +122,28 @@ public class MainActivity extends AppCompatActivity {
             }
             switch(item.getItemId()) {
                 case R.id.cassi_menu_main:
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.cassi_main_fragment_container,
-                                    new MainScreenFragment()).commit();
+                    getSupportFragmentManager().popBackStack();
                     getSupportActionBar().setTitle(R.string.app_name);
                     break;
                 case R.id.cassi_menu_pattern_settings:
+                    getSupportFragmentManager().popBackStackImmediate();
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.cassi_main_fragment_container,
-                                    new PatternFragment()).commit();
+                                    new PatternFragment()).addToBackStack(null).commit();
                     getSupportActionBar().setTitle(R.string.cassi_patterns_title);
                     break;
                 case R.id.cassi_menu_pattern_mappings:
+                    getSupportFragmentManager().popBackStackImmediate();
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.cassi_main_fragment_container,
-                                    new PatternMappingFragment()).commit();
+                                    new PatternMappingFragment()).addToBackStack(null).commit();
                     getSupportActionBar().setTitle(R.string.cassi_mapping_title);
                     break;
                 case R.id.cassi_menu_network_ble:
+                    getSupportFragmentManager().popBackStackImmediate();
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.cassi_main_fragment_container,
-                                    new BLESettingsFragment()).commit();
+                                    new BLESettingsFragment()).addToBackStack(null).commit();
                     getSupportActionBar().setTitle(R.string.cassi_settings_ble_title);
                     break;
                 default: return false;
@@ -172,5 +173,14 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode==MainScreenFragment.ENABLE_BLUETOOTH&&resultCode==RESULT_OK) {
             ((Button) findViewById(R.id.start)).callOnClick();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(mDrawerLayout.isDrawerOpen(findViewById(R.id.cassi_nav))) {
+            mDrawerLayout.closeDrawers();
+            return;
+        }
+        super.onBackPressed();
     }
 }
