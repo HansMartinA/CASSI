@@ -74,6 +74,7 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
      * Boolean value indicating if a connection has been established.
      */
     private boolean connected = false;
+    private boolean writing = false;
     /**
      * Callback for gatt actions.
      */
@@ -94,7 +95,15 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
             for(BluetoothGattService s : gatt.getServices()) {
                 if(s.getUuid().toString().equals(service)) {
                     for(BluetoothGattCharacteristic characteristic : s.getCharacteristics()) {
-                        bleGatt.readCharacteristic(characteristic);
+                        String uuid = characteristic.getUuid().toString();
+                        if(uuid.equals(char1)) {
+                            motors = characteristic;
+                            bleGatt.readCharacteristic(motors);
+                        } else if(uuid.equals(char2)) {
+                            frequency = characteristic;
+                        } else if(uuid.equals(char3)) {
+                            receiver = characteristic;
+                        }
                     }
                 }
             }
@@ -103,13 +112,16 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic characteristic, int status) {
-            String uuidString = characteristic.getUuid().toString();
-            if(uuidString.equals(char1)) {
+            if(characteristic==motors) {
                 motorAmount = characteristic.getValue()[0];
-            } else if(uuidString.equals(char2)) {
+                bleGatt.readCharacteristic(frequency);
+            } else if(characteristic==frequency) {
                 minPlayTime = characteristic.getValue()[0];
-                minPlayTime = (1/minPlayTime)/1000;
-            } else if(uuidString.equals(char3)) {
+                System.out.println(characteristic.getValue().length);
+                minPlayTime = (int)((1.0/minPlayTime)*1000);
+                System.out.println(minPlayTime);
+                bleGatt.readCharacteristic(receiver);
+            } else if(characteristic==receiver) {
                 receiver = characteristic;
                 send(noPlay);
             }
@@ -117,9 +129,11 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
 
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            System.out.println("hier");
+            writing = false;
         }
     };
+    private BluetoothGattCharacteristic frequency;
+    private BluetoothGattCharacteristic motors;
     /**
      * Stores the characteristic that receives value updates.
      */
@@ -249,9 +263,12 @@ public class AndroidBLEConnectionHandler extends BLEConnectionHandler {
         for(int i=0; i<actualValues.length; i++) {
             actualValues[i] = values[i];
         }
-        receiver.setValue(actualValues);
-        receiver.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-        bleGatt.writeCharacteristic(receiver);
+        if(!writing) {
+            writing = true;
+            receiver.setValue(actualValues);
+            receiver.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
+            bleGatt.writeCharacteristic(receiver);
+        }
     }
 
     @Override
