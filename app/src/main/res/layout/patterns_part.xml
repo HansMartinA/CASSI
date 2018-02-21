@@ -49,7 +49,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         android:text="@string/cassi_patterns_part_default"
         app:layout_constraintTop_toBottomOf="@id/cassi_patterns_delete_part"
         app:layout_constraintRight_toLeftOf="@id/cassi_patterns_lay_unit"
-        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_lay_duration"/>
+        app:layout_constraintLeft_toRightOf="@id/cassi_patterns_lay_duration"
+        android:nextFocusForward="@id/cassi_patterns_duration"/>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:id="@+id/cassi_patterns_lay_unit"
         android:text="@string/cassi_patterns_duration_unit"

@@ -21,8 +21,11 @@
 
 package marm.mobile.cassi;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.os.IBinder;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +33,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import marm.mobile.cassi.model.FileManager;
 
@@ -52,6 +57,19 @@ public class MainActivity extends AppCompatActivity {
      */
     private MenuItem lastItem;
 
+    /**
+     * Hides the keyboard.
+     *
+     * @param view view that has the focus.
+     * @param context context in which the view resides.
+     */
+    public static void hideKeyboard(View view, Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        view.clearFocus();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +80,13 @@ public class MainActivity extends AppCompatActivity {
                 new MainScreenFragment()).commit();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.cassi_nav_parent);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, tool,
-                R.string.cassi_nav_open, R.string.cassi_nav_close);
+                R.string.cassi_nav_open, R.string.cassi_nav_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                MainActivity.hideKeyboard(MainActivity.this.getCurrentFocus(), MainActivity.this);
+            }
+        };
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -73,9 +97,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
     }
 
@@ -88,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(MenuItem item) {
             if(item.isChecked()) {
+                mDrawerLayout.closeDrawers();
                 return true;
             }
             switch(item.getItemId()) {

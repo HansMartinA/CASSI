@@ -57,7 +57,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         android:layout_height="wrap_content"
         android:indeterminate="false"
         style="?android:attr/progressBarStyleHorizontal"
-        android:progress="10"
+        android:progress="100"
         app:layout_constraintTop_toBottomOf="@id/cassi_status_scroll"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

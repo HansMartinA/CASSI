@@ -52,7 +52,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         app:layout_constraintLeft_toRightOf="@id/cassi_patterns_lay_name"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@id/cassi_patterns_save"
-        android:inputType="text"/>
+        android:inputType="text"
+        android:nextFocusForward="@id/cassi_patterns_name"/>
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:id="@+id/cassi_patterns_save" android:text="@string/cassi_patterns_save"
         app:layout_constraintHorizontal_chainStyle="spread"

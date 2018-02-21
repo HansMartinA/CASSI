@@ -21,14 +21,18 @@
 
 package marm.mobile.cassi;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatImageButton;
 import android.text.InputFilter;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -126,6 +130,7 @@ public class PatternFragment extends Fragment
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        MainActivity.hideKeyboard(getView().getRootView(), getContext());
         selectedPattern = pManager.getPatterns().get(pos);
         showSelectedPattern();
     }
@@ -181,6 +186,7 @@ public class PatternFragment extends Fragment
      * @param v view.
      */
     public void saveClicked(View v) {
+        MainActivity.hideKeyboard(getView().getRootView(), getContext());
         String name = nameInput.getText().toString();
         for(int i=0; i<pManager.getPatterns().size(); i++) {
             if(name.equals(pManager.getPatterns().get(i).getName())) {
@@ -281,6 +287,7 @@ public class PatternFragment extends Fragment
      * @param v view.
      */
     public void deleteClicked(View v) {
+        MainActivity.hideKeyboard(getView().getRootView(), getContext());
         if(selectedPattern==empty) {
             return;
         }
@@ -296,6 +303,7 @@ public class PatternFragment extends Fragment
      * @param v view.
      */
     public void newPartClicked(View v) {
+        MainActivity.hideKeyboard(getView().getRootView(), getContext());
         getLayoutInflater().inflate(R.layout.patterns_part, partsContent);
         final View newPart = partsContent.getChildAt(partsContent.getChildCount()-1);
         ((TextView) newPart.findViewById(R.id.cassi_patterns_lay_part))
@@ -308,6 +316,19 @@ public class PatternFragment extends Fragment
                         deletePartClicked(newPart);
                     }
                 });
+        ((EditText) getView().findViewById(R.id.cassi_patterns_name)).
+                setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        //if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                            // hide virtual keyboard
+                            InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(getView().getRootView().getWindowToken(),
+                                    0);
+                            return true;
+                        //}
+                        //return false;
+                    }
+                });;
     }
 
     /**
@@ -316,6 +337,7 @@ public class PatternFragment extends Fragment
      * @param v view.
      */
     public void deletePartClicked(View v) {
+        MainActivity.hideKeyboard(getView().getRootView(), getContext());
         partsContent.removeView(v);
         for(int i=0; i<partsContent.getChildCount(); i++) {
             ((TextView) partsContent.getChildAt(i).findViewById(R.id.cassi_patterns_lay_part))
