@@ -75,4 +75,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <string name="cassi_notification_end_title">CASSI (stopped)</string>
     <string name="cassi_patterns_error_invalid_numbers">Pattern saved. Please note: There were some invalid numbers that were corrected.</string>
     <string name="cassi_patterns_error_note_range">Note: The values must be within 0 and 255.</string>
+    <string name="cassi_permissions_error_bluetooth">Couldn\'t get the permissions for using bluetooth. CASSI can\'t start its service.</string>
+    <string name="cassi_permissions_error_bluetooth_admin">Couldn\'t obtain the bluetooth admin permission. CASSI can\'t start its service.</string>
+    <string name="cassi_permissions_error_bluetooth_not_enabled">Bluetooth is not enabled. Please, enable bluetooth so that CASSI can start its service.</string>
+    <string name="cassi_permissions_error_access_coarse_location">Couldn\'t obtain access to the location. CASSI can\'t start its service.</string>
+    <string name="cassi_permissions_error_location_not_enabled">The location service is not enabled. Please, enable it.</string>
+    <string name="cassi_permissions_error_receive_sms">Couldn\'t the permission to receive incoming sms. CASSI can\'t start its service.</string>
+    <string name="cassi_permissions_error_receive_phone_state">Couldn\'t obtain the permission to notify incoming calls. CASSI can\'t start its service.</string>
+    <string name="cassi_permissions_enable_location_action">Enable</string>
 </resources>

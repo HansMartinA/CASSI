@@ -25,8 +25,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.os.IBinder;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -76,8 +76,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar tool = (Toolbar) findViewById(R.id.cassi_actionBar);
         setSupportActionBar(tool);
-        getSupportFragmentManager().beginTransaction().add(R.id.cassi_main_fragment_container,
-                new MainScreenFragment()).commit();
+        if(savedInstanceState==null) {
+            getSupportFragmentManager().beginTransaction().add(R.id.cassi_main_fragment_container,
+                    new MainScreenFragment()).commit();
+        }
         mDrawerLayout = (DrawerLayout) findViewById(R.id.cassi_nav_parent);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, tool,
                 R.string.cassi_nav_open, R.string.cassi_nav_close) {
@@ -158,20 +160,65 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if(requestCode==MainScreenFragment.PERMISSION_REQUEST_ID) {
-            for(int i=0; i<grantResults.length; i++) {
-                if(grantResults[i]!= PackageManager.PERMISSION_GRANTED) {
-                    return;
+        switch(requestCode) {
+            case MainScreenFragment.PERMISSION_BLUETOOTH_REQUEST_ID:
+                if(grantResults.length==1&&grantResults[0]==PackageManager.PERMISSION_GRANTED) {
+                    ((Button) findViewById(R.id.cassi_start)).performClick();
+                } else {
+                    Snackbar.make(mDrawerLayout, getString(
+                            R.string.cassi_permissions_error_bluetooth),
+                            Snackbar.LENGTH_LONG).show();
                 }
-            }
-            ((Button) findViewById(R.id.start)).callOnClick();
+                break;
+            case MainScreenFragment.PERMISSION_BLUETOOTH_ADMIN_REQUEST_ID:
+                if(grantResults.length==1&&grantResults[0]==PackageManager.PERMISSION_GRANTED) {
+                    ((Button) findViewById(R.id.cassi_start)).performClick();
+                } else {
+                    Snackbar.make(mDrawerLayout, getString(
+                            R.string.cassi_permissions_error_bluetooth_admin),
+                            Snackbar.LENGTH_LONG).show();
+                }
+                break;
+            case MainScreenFragment.PERMISSION_ACCESS_COARSE_LOCATION_REQUEST_ID:
+                if(grantResults.length==1&&grantResults[0]==PackageManager.PERMISSION_GRANTED) {
+                    ((Button) findViewById(R.id.cassi_start)).performClick();
+                } else {
+                    Snackbar.make(mDrawerLayout, getString(
+                            R.string.cassi_permissions_error_access_coarse_location),
+                            Snackbar.LENGTH_LONG).show();
+                }
+                break;
+            case MainScreenFragment.PERMISSION_RECEIVE_PHONE_STATE_REQUEST_ID:
+                if(grantResults.length==1&&grantResults[0]==PackageManager.PERMISSION_GRANTED) {
+                    ((Button) findViewById(R.id.cassi_start)).performClick();
+                } else {
+                    Snackbar.make(mDrawerLayout, getString(
+                            R.string.cassi_permissions_error_receive_phone_state),
+                            Snackbar.LENGTH_LONG).show();
+                }
+                break;
+            case MainScreenFragment.PERMISSION_RECEIVE_SMS_REQUEST_ID:
+                if(grantResults.length==1&&grantResults[0]==PackageManager.PERMISSION_GRANTED) {
+                    ((Button) findViewById(R.id.cassi_start)).performClick();
+                } else {
+                    Snackbar.make(mDrawerLayout, getString(
+                            R.string.cassi_permissions_error_receive_sms),
+                            Snackbar.LENGTH_LONG).show();
+                }
+                break;
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==MainScreenFragment.ENABLE_BLUETOOTH&&resultCode==RESULT_OK) {
-            ((Button) findViewById(R.id.start)).callOnClick();
+        if(requestCode==MainScreenFragment.ENABLE_BLUETOOTH) {
+            if(resultCode==RESULT_OK) {
+                ((Button) findViewById(R.id.start)).performClick();
+            } else {
+                Snackbar.make(mDrawerLayout, getString(
+                        R.string.cassi_permissions_error_bluetooth_not_enabled),
+                        Snackbar.LENGTH_LONG).show();
+            }
         }
     }
 

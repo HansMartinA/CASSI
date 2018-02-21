@@ -27,14 +27,16 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import java.util.ArrayList;
 
 /**
  * A fragment for the main screen.
@@ -43,9 +45,25 @@ import java.util.ArrayList;
  */
 public class MainScreenFragment extends Fragment {
     /**
-     * ID used for requesting permissions.
+     * ID used for requesting the BLUETOOTH permission.
      */
-    public final static int PERMISSION_REQUEST_ID = 5;
+    public final static int PERMISSION_BLUETOOTH_REQUEST_ID = 10;
+    /**
+     * ID used for requesting the BLUETOOTH_ADMIN permission.
+     */
+    public final static int PERMISSION_BLUETOOTH_ADMIN_REQUEST_ID = 11;
+    /**
+     * ID used for requesting the RECEIVE_PHONE_STATE permission.
+     */
+    public final static int PERMISSION_RECEIVE_PHONE_STATE_REQUEST_ID = 12;
+    /**
+     * ID used for requesting the RECEIVE_SMS permission.
+     */
+    public final static int PERMISSION_RECEIVE_SMS_REQUEST_ID = 13;
+    /**
+     * ID used for requesting the ACCESS_COARSE_LOCATION permission.
+     */
+    public final static int PERMISSION_ACCESS_COARSE_LOCATION_REQUEST_ID = 14;
     /**
      * ID used for requesting enabling bluetooth.
      */
@@ -87,33 +105,38 @@ public class MainScreenFragment extends Fragment {
      * @return true when all permissions are granted. false otherwise.
      */
     private boolean checkPermissions() {
-        boolean result = true;
-        ArrayList<String> notGrantedPermissions = new ArrayList<>();
-        result = result&&checkSinglePermission(Manifest.permission.BLUETOOTH, notGrantedPermissions);
-        result = result&&checkSinglePermission(Manifest.permission.BLUETOOTH_ADMIN, notGrantedPermissions);
-        result = result&&checkSinglePermission(Manifest.permission.READ_PHONE_STATE, notGrantedPermissions);
-        result = result&&checkSinglePermission(Manifest.permission.RECEIVE_SMS, notGrantedPermissions);
-        result = result&&checkSinglePermission(Manifest.permission.ACCESS_COARSE_LOCATION, notGrantedPermissions);
-        if(!result) {
-            String[] permissionsToRequest =
-                    notGrantedPermissions.toArray(new String[notGrantedPermissions.size()]);
-            ActivityCompat.requestPermissions(getActivity(), permissionsToRequest, 0);
+        if(!checkSinglePermission(Manifest.permission.BLUETOOTH, PERMISSION_BLUETOOTH_REQUEST_ID)) {
+            return false;
         }
-        return result;
+        if(!checkSinglePermission(Manifest.permission.BLUETOOTH_ADMIN,
+                PERMISSION_BLUETOOTH_ADMIN_REQUEST_ID)) {
+            return false;
+        }
+        if(!checkSinglePermission(Manifest.permission.READ_PHONE_STATE,
+                PERMISSION_RECEIVE_PHONE_STATE_REQUEST_ID)) {
+            return false;
+        }
+        if(!checkSinglePermission(Manifest.permission.RECEIVE_SMS,
+                PERMISSION_RECEIVE_SMS_REQUEST_ID)) {
+            return false;
+        }
+        if(!checkSinglePermission(Manifest.permission.ACCESS_COARSE_LOCATION,
+                PERMISSION_ACCESS_COARSE_LOCATION_REQUEST_ID)) {
+            return false;
+        }
+        return true;
     }
 
     /**
      * Checks for a single permission.
      *
      * @param permission the permission.
-     * @param notGrantedPermissions list of all not-granted permissions. If this permission is not
-     *                              granted, it will be added to the list.
      * @return true when the permission is granted. false otherwise.
      */
-    private boolean checkSinglePermission(String permission, ArrayList<String> notGrantedPermissions) {
+    private boolean checkSinglePermission(String permission, int requestID) {
         if(ActivityCompat.checkSelfPermission(getContext(), permission)
                 !=PackageManager.PERMISSION_GRANTED) {
-            notGrantedPermissions.add(permission);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, requestID);
             return false;
         } else {
             return true;
@@ -132,6 +155,29 @@ public class MainScreenFragment extends Fragment {
         if(bleAdapter==null||!bleAdapter.isEnabled()) {
             Intent enableBLEIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBLEIntent, ENABLE_BLUETOOTH);
+            return;
+        }
+        LocationManager locManager = (LocationManager) getContext()
+                .getSystemService(Context.LOCATION_SERVICE);
+        boolean hasEnabledLocationProvider = false;
+        for(String provider : locManager.getAllProviders()) {
+            if(!provider.equals(LocationManager.PASSIVE_PROVIDER)&&
+                    locManager.isProviderEnabled(provider)) {
+                hasEnabledLocationProvider = true;
+                break;
+            }
+        }
+        if(!hasEnabledLocationProvider) {
+            Snackbar.make(getView(), getString(
+                    R.string.cassi_permissions_error_location_not_enabled),
+                    Snackbar.LENGTH_LONG).setAction(R.string.cassi_permissions_enable_location_action,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent enableLocationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(enableLocationIntent);
+                        }
+                    }).show();
             return;
         }
         Intent intent = new Intent(getContext(), CASSIService.class);
